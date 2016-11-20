@@ -35,8 +35,5 @@ type Environment struct {
 
 func (e *Environment) Bind(cc *cobra.Command) {
 	cc.SetOutput(e.Stderr)
-	cc.PersistentPreRunE = func(cc *cobra.Command, args []string) (err error) {
-		e.WD, err = os.Getwd()
-		return
-	}
+	e.WD, _ = os.Getwd()
 }
