@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/cobra"
 	"reflect"
 	"strings"
-	"fmt"
 )
 
 type Command interface {}
