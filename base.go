@@ -22,8 +22,6 @@ type Runnable interface {
 
 // Attach command. If command implements Binder it will be also evaluated
 func Attach(c Command, binders []Binder, cmds ...*cobra.Command) (cc *cobra.Command) {
-	println(fmt.Sprint(c))
-
 	cc = &cobra.Command{}
 	for _, binder := range binders {
 		binder.Bind(cc)
