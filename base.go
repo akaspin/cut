@@ -6,21 +6,18 @@ import (
 	"strings"
 )
 
+type Command interface {}
+
 // Binder can bound some options to cobra.
 type Binder interface {
 	Bind(cc *cobra.Command)
 }
 
-type Command interface {
+type Runnable interface {
 
 	// Run command with rest of args
 	Run(args ...string) (err error)
 }
-
-// RunNone
-type RunNone struct {}
-func (r RunNone) Run(args ...string) (err error) { return }
-
 
 // Attach command. If command implements Binder it will be also evaluated
 func Attach(c Command, binders []Binder, cmds ...*cobra.Command) (cc *cobra.Command) {
@@ -36,10 +33,11 @@ func Attach(c Command, binders []Binder, cmds ...*cobra.Command) (cc *cobra.Comm
 		chunks := strings.Split(cmd, ".")
 		cc.Use = strings.ToLower(strings.TrimPrefix(chunks[len(chunks)-1], "*"))
 	}
-	if len(cmds) == 0 {
+	if c1, ok := c.(Runnable); ok {
 		cc.RunE = func(cc *cobra.Command, args []string) (err error) {
-			return c.Run(args...)
+			return c1.Run(args...)
 		}
+
 	}
 	cc.AddCommand(cmds...)
 	return
